@@ -1,8 +1,10 @@
 package model;
+
+
 import java.util.ArrayList;
 
 public class List {
-    private ArrayList<Task> tasks;
+    public ArrayList<Task> tasks;
 
     public List(){
         this.tasks = new ArrayList<Task>();
@@ -32,9 +34,15 @@ public class List {
         task.setName(name);
     }
 
+
+        
+    
+
     public void showTasks(){
+        int id = 0;
         for (Task task : tasks) {
-            System.out.println(task.getName() + " - " + task.getPriority() + " - " + task.getStatus());
+            System.out.println(id + " - " + task.getName() + " - " + task.getPriority() + " - " + task.getStatus());
+            id++;
         }
     }
 
