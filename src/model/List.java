@@ -8,6 +8,10 @@ public class List {
         this.tasks = new ArrayList<Task>();
     }
 
+    public Task getTask(int index){
+        return tasks.get(index);
+    }
+
     public void adicionar(Task task){
         tasks.add(task);    
 

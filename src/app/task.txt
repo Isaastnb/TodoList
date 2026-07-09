@@ -1,0 +1,5 @@
+Verificar código; Alta; false;
+Ir ao banco; Alta; false
+Limpar canto da Amora; Alto; false
+
+

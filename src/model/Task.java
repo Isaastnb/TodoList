@@ -6,6 +6,9 @@ public class Task {
     private boolean status;
     
 
+    public Task(){
+        
+    }
     public Task(String name, String priority,boolean status){
         this.name = name;
         this.priority = priority;
