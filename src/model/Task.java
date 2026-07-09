@@ -3,10 +3,10 @@ package model;
 public class Task {
     private String name;
     private String priority;
-    private String status;
+    private boolean status;
     
 
-    public Task(String name, String priority,String status){
+    public Task(String name, String priority,boolean status){
         this.name = name;
         this.priority = priority;
         this.status = status;
@@ -20,10 +20,10 @@ public class Task {
         return priority;
     }
 
-    public String getStatus(){
+    public boolean getStatus(){
         return status;
     }
-    public void setStatus(String status){
+    public void setStatus(boolean status){
         this.status = status;
     }
     public void setPriority(String priority){
