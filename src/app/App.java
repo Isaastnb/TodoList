@@ -80,7 +80,7 @@ public class App {
                             System.out.print("Enter task id to update: ");
                             idToUpdate = sc.nextInt();
                             System.out.print("Enter new task status: ");
-                            boolean newStatus = sc.nextBoolean();
+                          //  boolean newStatus = sc.nextBoolean();
                             list.alterarStatus(list.getTask(idToUpdate));
                             break;
                         default:
