@@ -39,7 +39,7 @@ public class List {
     
 
     public void showTasks(){
-        int id = 0;
+        int id = 1;
         for (Task task : tasks) {
             System.out.println(id + " - " + task.getName() + " - " + task.getPriority() + " - " + task.getStatus());
             id++;
