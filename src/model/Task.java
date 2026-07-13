@@ -2,11 +2,14 @@ package model;
 
 public class Task {
     private String name;
-    private String priority;
-    private String status;
+    private int priority;
+    private int status;
     
 
-    public Task(String name, String priority,String status){
+    public Task(){
+        
+    }
+    public Task(String name, int priority,int status){
         this.name = name;
         this.priority = priority;
         this.status = status;
@@ -16,17 +19,32 @@ public class Task {
         return name;
     }
 
-    public String getPriority(){
+    public int writePriority(){
         return priority;
     }
 
-    public String getStatus(){
+
+    public String getPriority(){
+        switch (priority) {
+            case 1:
+                return "High";
+            case 2:
+                return "Medium";
+            
+            case 3:
+                return "Low";
+            default:
+                return "Undefined";
+        }
+    }
+
+    public int getStatus(){
         return status;
     }
-    public void setStatus(String status){
+    public void setStatus(int status){
         this.status = status;
     }
-    public void setPriority(String priority){
+    public void setPriority(int priority){
         this.priority = priority;
     }
     public void setName(String name){
