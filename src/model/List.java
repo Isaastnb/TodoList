@@ -23,10 +23,10 @@ public class List {
     }
 
     public void alterarStatus(Task task){
-        task.setStatus(!task.getStatus());
+        task.setStatus(task.getStatus() == 0 ? 1 : 0);
     }
 
-    public void alterarPrioridade(Task task, String priority){
+    public void alterarPrioridade(Task task, int priority){
         task.setPriority(priority);
     }
 
@@ -41,7 +41,8 @@ public class List {
     public void showTasks(){
         int id = 1;
         for (Task task : tasks) {
-            System.out.println(id + " - " + task.getName() + " - " + task.getPriority() + " - " + task.getStatus());
+            System.out.println(id + " - " + task.getName() + " 🔴 " + task.getPriority() + " 🔴 " + 
+                (task.getStatus() == 0 ? "pending" : "done"));
             id++;
         }
     }

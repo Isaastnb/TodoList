@@ -20,13 +20,16 @@ public class App {
             Task tsk = new Task();
             String[] readLine = line.split(";");
             tsk.setName(readLine[0]);
-            tsk.setPriority(readLine[1]);
-            tsk.setStatus(Boolean.parseBoolean(readLine[2]));
+            tsk.setPriority(Integer.parseInt(readLine[1]));
+            tsk.setStatus(Integer.parseInt(readLine[2]));
             list.adicionar(tsk);
         }
         br.close();
 
+        // Initial menu
+
         while(loop) {
+            System.out.println("----------------------------");
             System.out.println("1 - View tasks");
             System.out.println("2 - Add task");
             System.out.println("3 - Remove task");
@@ -34,6 +37,7 @@ public class App {
             System.out.println("5 - Exit");
             System.out.print("Choose an option: ");
             int option = sc.nextInt();
+            System.out.println("----------------------------");
             
             switch (option) {
                 case 1: // show tasks
@@ -43,16 +47,21 @@ public class App {
                     sc.nextLine();
                     System.out.print("Enter task name: ");
                     String name = sc.nextLine();
+                    System.out.println("------------------------");
+                    System.out.println("Set 1 for High priority");
+                    System.out.println("Set 2 for Medium priority");
+                    System.out.println("Set 3 for Low priority");
+                    System.out.println("Or set 0 to Undefined priority");
                     System.out.print("Enter task priority: ");
-                    String priority = sc.nextLine();
-                    System.out.print("Enter task status: ");
-                    boolean status = sc.nextBoolean();
+                    String priorityInput = sc.nextLine().trim();
+                    int priority = priorityInput.isEmpty() ? 0 : Integer.parseInt(priorityInput);
+                    int status = 0;
                     list.adicionar(new Task(name, priority, status));
                     break;
                 case 3: // remove tasks
-                    System.out.print("Enter task id to remove: ");
+                    System.out.print("Enter task number to remove: ");
                     int idToRemove = sc.nextInt();
-                    list.remover(list.getTask(idToRemove));
+                    list.remover(list.getTask(idToRemove-1));
                     break;
                 case 4: // update tasks
                     System.out.println("What do you want to update?");
@@ -67,21 +76,27 @@ public class App {
                             int idToUpdate = sc.nextInt();
                             System.out.print("Enter new task name: ");
                             String newName = sc.next();
-                            list.alterarNome(list.getTask(idToUpdate), newName);
+                            list.alterarNome(list.getTask(idToUpdate - 1), newName);
                             break;
                         case 2:
                             System.out.print("Enter task id to update: ");
                             idToUpdate = sc.nextInt();
+                            sc.nextLine(); // Clear scanner buffer
+                            System.out.println("-----------------------");
+                            System.out.println("Set 1 for High priority");
+                            System.out.println("Set 2 for Medium priority");
+                            System.out.println("Set 3 for Low priority");
+                            System.out.println("Or set nothing to Undefined priority");
+                            System.out.println("-----------------------");
                             System.out.print("Enter new task priority: ");
-                            String newPriority = sc.nextLine();
-                            list.alterarPrioridade(list.getTask(idToUpdate), newPriority);
+                            String newPriorityInput = sc.nextLine().trim();
+                            int newPriority = newPriorityInput.isEmpty() ? 0 : Integer.parseInt(newPriorityInput);
+                            list.alterarPrioridade(list.getTask(idToUpdate - 1), newPriority);
                             break;
                         case 3:
                             System.out.print("Enter task id to update: ");
                             idToUpdate = sc.nextInt();
-                            System.out.print("Enter new task status: ");
-                          //  boolean newStatus = sc.nextBoolean();
-                            list.alterarStatus(list.getTask(idToUpdate));
+                            list.alterarStatus(list.getTask(idToUpdate - 1));
                             break;
                         default:
                             System.out.println("Invalid option");
@@ -102,7 +117,7 @@ public class App {
         // open writer (false to overwrite / truncate) and write all tasks
         BufferedWriter bw = new BufferedWriter(new FileWriter("src/app/task.txt", false));
         for (Task task : list.tasks) {
-            bw.write(task.getName() + ";" + task.getPriority() + ";" + task.getStatus() + "\n");
+            bw.write(task.getName() + ";" + task.writePriority() + ";" + task.getStatus() + "\n");
         }
         bw.close();
         sc.close();
