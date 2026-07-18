@@ -41,8 +41,8 @@ public class List {
     public void showTasks(){
         int id = 1;
         for (Task task : tasks) {
-            System.out.println(id + " - " + task.getName() + " 🔴 " + task.getPriority() + " 🔴 " + 
-                (task.getStatus() == 0 ? "pending" : "done"));
+            System.out.println(id + " - " + task.getName() + " | " + task.getPriority() + " | " + 
+                (task.getStatus() == 0 ? "PENDING ⏳️" : "DONE ✅"));
             id++;
         }
     }

@@ -52,6 +52,7 @@ public class App {
                     System.out.println("Set 2 for Medium priority");
                     System.out.println("Set 3 for Low priority");
                     System.out.println("Or set 0 to Undefined priority");
+                    System.out.println("------------------------");
                     System.out.print("Enter task priority: ");
                     String priorityInput = sc.nextLine().trim();
                     int priority = priorityInput.isEmpty() ? 0 : Integer.parseInt(priorityInput);
