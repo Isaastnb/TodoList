@@ -21,7 +21,11 @@ task3;priority3;status3
 
 ## Requirements & Run
 - Java JDK 17 or higher
-- To run the application, execute from the root directory:
+- To compile and run the application automatically, run from the root directory:
   ```bash
-  java -cp bin app.App
+  ./run.sh
+  ```
+- Alternatively, you can compile and run it manually:
+  ```bash
+  javac -d bin -sourcepath src src/app/App.java && java -cp bin app.App
   ```
