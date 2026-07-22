@@ -1,33 +1,39 @@
 package app;
+
 import model.Task;
 import model.List;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import java.io.File;
 import java.io.IOException;
+/*import java.io.BufferedReader;
+import java.io.FileReader;*/
 import java.util.Scanner;
-import java.io.BufferedWriter;
 
 public class App {
     public static void main (String[] args) throws IOException {
         List list = new List();
         Scanner sc = new Scanner(System.in);
-        BufferedReader br = new BufferedReader(new FileReader("src/app/task.txt"));
         boolean loop = true;
-        String line;
 
-        while ((line = br.readLine()) != null && !line.isEmpty()) {
-            Task tsk = new Task();
-            String[] readLine = line.split(";");
-            tsk.setName(readLine[0]);
-            tsk.setPriority(Integer.parseInt(readLine[1]));
-            tsk.setStatus(Integer.parseInt(readLine[2]));
-            list.adicionar(tsk);
+        // Initialize Jackson ObjectMapper configured for field-based serialization/deserialization
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE);
+        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+
+        File jsonFile = new File("src/app/tasks.json");
+
+        if (jsonFile.exists()) {
+            Task[] loadedTasks = mapper.readValue(jsonFile, Task[].class);
+            for (Task tsk : loadedTasks) {
+                list.adicionar(tsk);
+            }
+        } else {
+            System.out.println("No tasks file found, please create a file named tasks.json in the src/app/ folder!");
         }
-        br.close();
 
         // Initial menu
-
         while(loop) {
             System.out.println("----------------------------");
             System.out.println("1 - View tasks");
@@ -113,17 +119,15 @@ public class App {
             }
             System.out.println();
         }
-        
 
-        // open writer (false to overwrite / truncate) and write all tasks
-        BufferedWriter bw = new BufferedWriter(new FileWriter("src/app/task.txt", false));
-        for (Task task : list.tasks) {
-            bw.write(task.getName() + ";" + task.writePriority() + ";" + task.getStatus() + "\n");
+        // Save all tasks in pretty-printed JSON format
+        try {
+            mapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, list.tasks);
+            System.out.println("Tasks successfully saved!");
+        } catch (Exception e) {
+            System.out.println("Error saving tasks to JSON file: " + e.getMessage());
         }
-        bw.close();
+        
         sc.close();
-
-        
-        
     }
 }
