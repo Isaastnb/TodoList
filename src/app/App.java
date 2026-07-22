@@ -7,8 +7,6 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import java.io.File;
 import java.io.IOException;
-/*import java.io.BufferedReader;
-import java.io.FileReader;*/
 import java.util.Scanner;
 
 public class App {
