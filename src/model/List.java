@@ -34,6 +34,12 @@ public class List {
         task.setName(name);
     }
 
+    public void removeAllTasks(){
+        for (Task task : tasks) {
+            tasks.remove(task);
+        }
+    }
+
 
     // list tasks sorted by priority
     
