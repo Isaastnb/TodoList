@@ -35,8 +35,55 @@ public class List {
     }
 
 
-        
+    // list tasks sorted by priority
     
+    public void showTasksByPriority(){
+        int id = 1;
+        ArrayList<Task> taskP1 = new ArrayList<Task>();
+        ArrayList<Task> taskP2 = new ArrayList<Task>();
+        ArrayList<Task> taskP3 = new ArrayList<Task>();
+        ArrayList<Task> taskPun = new ArrayList<Task>();
+        for (Task task : tasks) {
+            switch (task.getPriority()) {
+                case "High":
+                    taskP1.add(task);
+                    break;
+                case "Medium":
+                    taskP2.add(task);
+                    break;
+                case "Low":
+                    taskP3.add(task);
+                    break;
+                default:
+                    taskPun.add(task);
+                    break;
+            } 
+        }
+
+        for (Task task : taskP1) {
+            System.out.println(id + " - " + task.getName() + " | " + task.getPriority() + " | " + 
+                (task.getStatus() == 0 ? "PENDING ⏳️" : "DONE ✅"));
+            id++;
+        }
+        for (Task task: taskP2){
+            System.out.println(id + " - " + task.getName() + " | " + task.getPriority() + " | " + 
+                (task.getStatus() == 0 ? "PENDING ⏳️" : "DONE ✅"));
+            id++;
+        }
+
+        for (Task task: taskP3){
+            System.out.println(id + " - " + task.getName() + " | " + task.getPriority() + " | " + 
+                (task.getStatus() == 0 ? "PENDING ⏳️" : "DONE ✅"));
+            id++;
+        }
+
+        for (Task task: taskPun){
+            System.out.println(id + " - " + task.getName() + " | " + task.getPriority() + " | " + 
+                (task.getStatus() == 0 ? "PENDING ⏳️" : "DONE ✅"));
+            id++;
+        }
+
+    }
 
     public void showTasks(){
         int id = 1;
@@ -45,6 +92,7 @@ public class List {
                 (task.getStatus() == 0 ? "PENDING ⏳️" : "DONE ✅"));
             id++;
         }
+        
     }
 
     
