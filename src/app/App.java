@@ -38,7 +38,8 @@ public class App {
             System.out.println("2 - Add task");
             System.out.println("3 - Remove task");
             System.out.println("4 - Update task");
-            System.out.println("5 - Exit");
+            System.out.println("5 - View tasks by priority (beta)");
+            System.out.println("6 - Exit");
             System.out.print("Choose an option: ");
             int option = sc.nextInt();
             System.out.println("----------------------------");
@@ -108,7 +109,10 @@ public class App {
                             break;
                     }
                     break;
-                case 5: // exit
+                case 5: 
+                    list.showTasksByPriority();
+                    break;
+                case 6: // exit
                     loop = false;
                     break;
                 default:
