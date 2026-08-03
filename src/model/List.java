@@ -35,9 +35,7 @@ public class List {
     }
 
     public void removeAllTasks(){
-        for (Task task : tasks) {
-            tasks.remove(task);
-        }
+        tasks.clear();
     }
 
 

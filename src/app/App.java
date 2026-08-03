@@ -64,11 +64,13 @@ public class App {
                     int priority = priorityInput.isEmpty() ? 0 : Integer.parseInt(priorityInput);
                     int status = 0;
                     list.adicionar(new Task(name, priority, status));
+                    mapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, list.tasks);
                     break;
                 case 3: // remove tasks
                     System.out.print("Enter task number to remove: ");
                     int idToRemove = sc.nextInt();
                     list.remover(list.getTask(idToRemove-1));
+                    mapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, list.tasks);
                     break;
                 case 4: // update tasks
                     System.out.println("What do you want to update?");
