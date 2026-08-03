@@ -39,7 +39,8 @@ public class App {
             System.out.println("3 - Remove task");
             System.out.println("4 - Update task");
             System.out.println("5 - View tasks by priority (beta)");
-            System.out.println("6 - Exit");
+            System.out.println("6 - Remove all tasks");
+            System.out.println("7 - Exit");
             System.out.print("Choose an option: ");
             int option = sc.nextInt();
             System.out.println("----------------------------");
@@ -63,11 +64,13 @@ public class App {
                     int priority = priorityInput.isEmpty() ? 0 : Integer.parseInt(priorityInput);
                     int status = 0;
                     list.adicionar(new Task(name, priority, status));
+                    mapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, list.tasks);
                     break;
                 case 3: // remove tasks
                     System.out.print("Enter task number to remove: ");
                     int idToRemove = sc.nextInt();
                     list.remover(list.getTask(idToRemove-1));
+                    mapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, list.tasks);
                     break;
                 case 4: // update tasks
                     System.out.println("What do you want to update?");
@@ -112,7 +115,10 @@ public class App {
                 case 5: 
                     list.showTasksByPriority();
                     break;
-                case 6: // exit
+                case 6:
+                    list.removeAllTasks();
+                    break;
+                case 7: // exit
                     loop = false;
                     break;
                 default:
