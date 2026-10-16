@@ -1,141 +1,99 @@
 package app;
 
+import database.Database;
+import repository.TaskRepository;
 import model.Task;
-import model.List;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import java.io.File;
-import java.io.IOException;
 import java.util.Scanner;
 
 public class App {
-    public static void main (String[] args) throws IOException {
-        List list = new List();
-        Scanner sc = new Scanner(System.in);
+    public static void main(String[] args) throws Exception {
         boolean loop = true;
+        Database.createTable();
+        Database.connect();
+        Scanner scanner = new Scanner(System.in);
 
-        // Initialize Jackson ObjectMapper configured for field-based serialization/deserialization
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE);
-        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+        while (loop) {
+            System.out.println("=== TODO LIST ===");
+            System.out.println("1. Adicionar tarefa");
+            System.out.println("2. Listar tarefas");
+            System.out.println("3. Finalizar tarefa");
+            System.out.println("4. Excluir tarefa");
+            System.out.println("5. Sair");
+            System.out.print("Escolha uma opção: ");
 
-        File jsonFile = new File("src/app/tasks.json");
+            // Scanner moved before loop
+            int option = scanner.nextInt();
+            scanner.nextLine(); // Limpar o buffer do scanner
 
-        if (jsonFile.exists()) {
-            Task[] loadedTasks = mapper.readValue(jsonFile, Task[].class);
-            for (Task tsk : loadedTasks) {
-                list.adicionar(tsk);
-            }
-        } else {
-            System.out.println("No tasks file found, please create a file named tasks.json in the src/app/ folder!");
-        }
-
-        // Initial menu
-        while(loop) {
-            System.out.println("----------------------------");
-            System.out.println("1 - View tasks");
-            System.out.println("2 - Add task");
-            System.out.println("3 - Remove task");
-            System.out.println("4 - Update task");
-            System.out.println("5 - View tasks by priority (beta)");
-            System.out.println("6 - Remove all tasks");
-            System.out.println("7 - Exit");
-            System.out.print("Choose an option: ");
-            int option = sc.nextInt();
-            System.out.println("----------------------------");
-            
             switch (option) {
-                case 1: // show tasks
-                    list.showTasks();
-                    break;
-                case 2: // add task
-                    sc.nextLine();
-                    System.out.print("Enter task name: ");
-                    String name = sc.nextLine();
-                    System.out.println("------------------------");
-                    System.out.println("Set 1 for High priority");
-                    System.out.println("Set 2 for Medium priority");
-                    System.out.println("Set 3 for Low priority");
-                    System.out.println("Or set 0 to Undefined priority");
-                    System.out.println("------------------------");
-                    System.out.print("Enter task priority: ");
-                    String priorityInput = sc.nextLine().trim();
-                    int priority = priorityInput.isEmpty() ? 0 : Integer.parseInt(priorityInput);
-                    int status = 0;
-                    list.adicionar(new Task(name, priority, status));
-                    mapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, list.tasks);
-                    break;
-                case 3: // remove tasks
-                    System.out.print("Enter task number to remove: ");
-                    int idToRemove = sc.nextInt();
-                    list.remover(list.getTask(idToRemove-1));
-                    mapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, list.tasks);
-                    break;
-                case 4: // update tasks
-                    System.out.println("What do you want to update?");
-                    System.out.println("1 - Name");
-                    System.out.println("2 - Priority");
-                    System.out.println("3 - Status");
-                    System.out.print("Choose an option: ");
-                    int optionToUpdate = sc.nextInt();
-                    switch (optionToUpdate) {
-                        case 1:
-                            System.out.print("Enter task id to update: ");
-                            int idToUpdate = sc.nextInt();
-                            System.out.print("Enter new task name: ");
-                            String newName = sc.next();
-                            list.alterarNome(list.getTask(idToUpdate - 1), newName);
-                            break;
-                        case 2:
-                            System.out.print("Enter task id to update: ");
-                            idToUpdate = sc.nextInt();
-                            sc.nextLine(); // Clear scanner buffer
-                            System.out.println("-----------------------");
-                            System.out.println("Set 1 for High priority");
-                            System.out.println("Set 2 for Medium priority");
-                            System.out.println("Set 3 for Low priority");
-                            System.out.println("Or set nothing to Undefined priority");
-                            System.out.println("-----------------------");
-                            System.out.print("Enter new task priority: ");
-                            String newPriorityInput = sc.nextLine().trim();
-                            int newPriority = newPriorityInput.isEmpty() ? 0 : Integer.parseInt(newPriorityInput);
-                            list.alterarPrioridade(list.getTask(idToUpdate - 1), newPriority);
-                            break;
-                        case 3:
-                            System.out.print("Enter task id to update: ");
-                            idToUpdate = sc.nextInt();
-                            list.alterarStatus(list.getTask(idToUpdate - 1));
-                            break;
-                        default:
-                            System.out.println("Invalid option");
-                            break;
+                case 1 -> {
+                    System.out.print("Digite o nome da tarefa: ");
+                    String name = scanner.nextLine();
+
+                    System.out.print("Digite a prioridade (1 - Alta, 2 - Média, 3 - Baixa): ");
+                    int priority = scanner.nextInt();
+
+                    Task task = new Task(name, priority, 0);
+                    TaskRepository taskRepository = new TaskRepository();
+                    taskRepository.save(task);
+
+                    System.out.println("Tarefa adicionada com sucesso!");
+                }
+                case 2 -> {
+                    TaskRepository taskRepository = new TaskRepository();
+                    var tasks = taskRepository.findAll();
+
+                    if (tasks.isEmpty()) {
+                        System.out.println("Nenhuma tarefa encontrada.");
+                    } else {
+                        System.out.println("=== Lista de Tarefas ===");
+                        for (Task task : tasks) {
+                            System.out.printf("ID: %d | Nome: %s | Prioridade: %s | Status: %d%n",
+                                    task.getId(), task.getName(), task.getPriority(), task.getStatus());
+                        }
                     }
-                    break;
-                case 5: 
-                    list.showTasksByPriority();
-                    break;
-                case 6:
-                    list.removeAllTasks();
-                    break;
-                case 7: // exit
+                }
+                case 3 -> {
+                    System.out.print("Digite o ID da tarefa a ser finalizada: ");
+                    int id = scanner.nextInt();
+                    scanner.nextLine(); // Limpar o buffer do scanner
+
+                    TaskRepository taskRepository = new TaskRepository();
+                    Task task = taskRepository.findById(id);
+
+                    if (task != null) {
+                        task.setStatus(1); // Marcar como finalizada
+                        taskRepository.update(task);
+
+                        System.out.println("Tarefa finalizada com sucesso!");
+                    } else {
+                        System.out.println("Tarefa não encontrada.");
+                    }
+                }
+                case 4 -> {
+                    System.out.print("Digite o ID da tarefa a ser excluída: ");
+                    int id = scanner.nextInt();
+                    scanner.nextLine(); // Limpar o buffer do scanner
+
+                    TaskRepository taskRepository = new TaskRepository();
+                    Task task = taskRepository.findById(id);
+
+                    if (task != null) {
+                        taskRepository.deleteById(id);
+                        System.out.println("Tarefa excluída com sucesso!");
+                    } else {
+                        System.out.println("Tarefa não encontrada.");
+                    }
+                }
+                case 5 -> {
                     loop = false;
-                    break;
-                default:
-                    System.out.println("Invalid option");
-                    break;
+                    System.out.println("Saindo do aplicativo...");
+                }
+                default -> System.out.println("Opção inválida. Tente novamente.");
             }
             System.out.println();
         }
+        scanner.close();
 
-        // Save all tasks in pretty-printed JSON format
-        try {
-            mapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, list.tasks);
-            System.out.println("Tasks successfully saved!");
-        } catch (Exception e) {
-            System.out.println("Error saving tasks to JSON file: " + e.getMessage());
-        }
-        
-        sc.close();
     }
 }
