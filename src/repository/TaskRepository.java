@@ -71,6 +71,7 @@ public class TaskRepository {
         ) {
             statement.setInt(1, id);
             statement.executeUpdate();
+            Database.resetTaskIdIfEmpty(connection);
         } catch (SQLException exception) {
             System.out.println("Erro ao excluir tarefa: " + exception.getMessage());
         }

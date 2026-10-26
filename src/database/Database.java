@@ -29,9 +29,22 @@ public class Database {
             Statement statement = connection.createStatement()
         ) {
             statement.execute(sql);
+            resetTaskIdIfEmpty(connection);
             System.out.println("Tabela tasks criada ou já existente.");
         } catch (SQLException exception) {
             System.out.println("Erro ao criar tabela: " + exception.getMessage());
+        }
+    }
+
+    public static void resetTaskIdIfEmpty(Connection connection) throws SQLException {
+        String sql = """
+            DELETE FROM sqlite_sequence
+            WHERE name = 'tasks'
+              AND NOT EXISTS (SELECT 1 FROM tasks)
+            """;
+
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate(sql);
         }
     }
 }
